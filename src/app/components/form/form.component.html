@@ -1,0 +1,102 @@
+ <div class="row justify-content-center mt-4 mb-4">
+    <div class="col-12 col-sm-10 col-md-6 col-lg-4">
+      <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+        <div
+          class="text-white p-4 d-flex align-items-center justify-content-between"
+          [ngStyle]="{ 'background-color': color }"
+        >
+          <div>
+            <h6 class="mb-1">{{mensaje}}</h6>
+            <h3 class="fw-bold mb-0">{{ cantidad }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<section class="survey-shell">
+  <div class="survey-card">
+    <header class="survey-header p-4" [ngStyle]="{'background':color}">
+      <h2 class="text-white text-center" >Encuesta política y electoral <i class="bi bi-patch-check"></i> </h2>
+    </header>
+
+    <form class="survey-form" (ngSubmit)="onSubmit()">
+      @for (pregunta of preguntas; track pregunta.id) {
+        <div class="question-block">
+          <label class="question-label" [for]="pregunta.id">
+            {{ pregunta.pregunta }}
+          </label>            
+           @if (pregunta.tipo === 'radio') {
+            <div class="radio-group">
+              @for (opcion of pregunta.radioOptions ?? []; track opcion.value) {
+                <label class="radio-option">
+                  <input class="form-check-input"
+                    type="radio"
+                    [name]="pregunta.id"
+                    [value]="opcion.value"
+                    [checked]="respuestasPayload[pregunta.id] === opcion.value"
+                    (change)="respuestasPayload[pregunta.id] = opcion.value"
+                  />
+                  <span>{{ opcion.label }}</span>
+                </label>
+              }
+            </div>
+          } @else if (pregunta.tipo === 'select') {
+            <select
+              [id]="pregunta.id"
+              class="form-select survey-input"
+              [name]="pregunta.id"
+              [(ngModel)]="respuestasPayload[pregunta.id]"
+            >
+              <option value="">Seleccione una opción</option>
+              @for (opcion of pregunta.opciones ?? []; track opcion.value) {
+                <option [value]="opcion.value">{{ opcion.label }}</option>
+              }
+            </select>
+          } @else if (pregunta.tipo === 'checkbox_multiple') {
+            <div class="checkbox-group" >
+              @for (opcion of pregunta.opciones ?? []; track opcion.value) {
+                <label class="checkbox-option"  >
+                  <input
+                    type="checkbox"
+                    [value]="opcion.value"
+                    [checked]="(respuestasPayload[pregunta.id] ?? []).includes(opcion.value)"
+                    (change)="onCheckboxChange(pregunta, opcion.value, $any($event.target).checked)"
+                  />
+                  <span class="fw-semibold">{{ opcion.label }}</span>
+                </label>
+              }
+            </div>
+          }
+            @else if (pregunta.tipo === 'range') {
+                <input
+                type="range"
+                [id]="pregunta.id"
+                class="form-range survey-input"
+                [name]="pregunta.id"
+                [(ngModel)]="respuestasPayload[pregunta.id]"
+                [min]="edad"
+                [max]="EdadMax"
+                step="10"
+                />
+                <div class="range-value text-center fw-semibold">
+                Edad seleccionada: De {{ respuestasPayload[pregunta.id] || edad}} años a {{ respuestasPayload[pregunta.id] + 10 || edad + 10}} años
+                </div>
+            } @else {
+                <input
+                type="text"
+                [id]="pregunta.id"
+                class="form-control survey-input"
+                [name]="pregunta.id"
+                [(ngModel)]="respuestasPayload[pregunta.id]"
+                />
+            }
+        </div>
+      }
+      
+      <button (click)="Contabilizador()" class="btn btn-primary survey-submit">
+        Enviar encuesta
+      </button>
+    </form>
+  </div>
+</section>
+{{mensaje}} {{cantidad}}

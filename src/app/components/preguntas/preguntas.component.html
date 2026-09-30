@@ -1,0 +1,132 @@
+<main class="question-builder">
+	<header class="page-heading">
+		<div>
+			<p class="eyebrow">EDITOR DE ENCUESTA</p>
+			<h1>Crear preguntas</h1>
+			<p class="heading-copy">Escribe una pregunta y define las opciones de respuesta.</p>
+		</div>
+		<span class="heading-mark" aria-hidden="true">Q</span>
+	</header>
+
+	<section class="editor-panel" aria-labelledby="editor-title">
+		<div class="panel-heading">
+			<div class="step-number">01</div>
+			<div>
+				<h2 id="editor-title">Pregunta nueva</h2>
+				<p>Los campos marcados con <span aria-hidden="true">*</span> son obligatorios.</p>
+			</div>
+		</div>
+
+		<form (ngSubmit)="createQuestion()">
+			<div class="field-group">
+				<label for="question-text">Enunciado de la pregunta <span>*</span></label>
+				<textarea
+					id="question-text"
+					name="questionText"
+					[(ngModel)]="questionText"
+					placeholder="Ej. ¿Cuál es tu principal medio de transporte?"
+					rows="3"
+					required
+				></textarea>
+			</div>
+
+			<div class="options-heading">
+				<div>
+					<label>Opciones de respuesta <span>*</span></label>
+					<p>Agrega al menos dos opciones. Puedes quitar las que no necesites.</p>
+				</div>
+				<span class="option-count">{{ options.length }} {{ options.length === 1 ? 'opción' : 'opciones' }}</span>
+			</div>
+
+			<div class="option-list">
+				@for (option of options; track $index; let index = $index) {
+					<div class="option-row">
+						<span class="option-index" aria-hidden="true">{{ (index + 1).toString().padStart(2, '0') }}</span>
+						<input
+							type="text"
+							[name]="'option-' + index"
+							[(ngModel)]="options[index]"
+							[attr.aria-label]="'Texto de la opción ' + (index + 1)"
+							[placeholder]="'Escribe la opción ' + (index + 1)"
+						/>
+						<button
+							class="icon-button remove-option"
+							type="button"
+							(click)="removeOption(index)"
+							[attr.aria-label]="'Eliminar opción ' + (index + 1)"
+							title="Eliminar opción"
+						>
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+				} @empty {
+					<p class="empty-options">No hay opciones todavía. Añade una para comenzar.</p>
+				}
+			</div>
+
+			<button class="add-option" type="button" (click)="addOption()">
+				<span aria-hidden="true">+</span>
+				Añadir opción
+			</button>
+
+			<div class="form-footer">
+				<label class="required-toggle">
+					<input type="checkbox" name="required" [(ngModel)]="required" />
+					<span class="toggle-track" aria-hidden="true"></span>
+					<span>Pregunta obligatoria</span>
+				</label>
+				<button
+					class="save-question"
+					type="submit"
+					  [disabled]="!canCreateQuestion"
+				>
+					Guardar pregunta
+					<span aria-hidden="true">&#8594;</span>
+				</button>
+			</div>
+		</form>
+	</section>
+
+	<section class="question-list" aria-labelledby="list-title">
+		<div class="list-heading">
+			<div>
+				<p class="eyebrow">CONTENIDO</p>
+				<h2 id="list-title">Preguntas de la encuesta</h2>
+			</div>
+			<span class="question-count">{{ createdQuestions.length }}</span>
+		</div>
+
+		@if (createdQuestions.length === 0) {
+			<div class="empty-list">
+				<span class="empty-mark" aria-hidden="true">+</span>
+				<p>Aún no has agregado preguntas</p>
+			</div>
+		} @else {
+			<ol class="saved-list">
+				@for (question of createdQuestions; track question.id; let index = $index) {
+					<li class="saved-question">
+						<span class="saved-number">{{ (index + 1).toString().padStart(2, '0') }}</span>
+						<div class="saved-content">
+							<h3>{{ question.text }}</h3>
+							<ul class="saved-options">
+								@for (option of question.options; track $index) {
+									<li>{{ option }}</li>
+								}
+							</ul>
+							<span class="saved-status">{{ question.required ? 'Obligatoria' : 'Opcional' }}</span>
+						</div>
+						<button
+							class="icon-button delete-question"
+							type="button"
+							(click)="removeQuestion(question.id)"
+							[attr.aria-label]="'Eliminar pregunta: ' + question.text"
+							title="Eliminar pregunta"
+						>
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</li>
+				}
+			</ol>
+		}
+	</section>
+</main>

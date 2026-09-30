@@ -1,0 +1,40 @@
+    <nav class="navbar navbar-expand-lg full-screen"id="menu" [ngStyle]="{'background-color': maincolor}">
+        <div class="container-fluid">  
+          <a href="index.html" class="navbar-brand text-white">
+           <img src="/images/joeltechrdlogo.jpeg" class="img-fluid" style="height: auto; width: 70px; border-radius: 50%;" alt="">
+          </a> 
+             <div class="row justify-content-center">
+                <div class="col-11 col-lg-12 gx-5">
+                  <span class="text-white fw-bold fs-5" >Encuesta Digital</span>
+                </div>
+               </div>
+          <div>
+          <!--  <input type="text" class="form form-control rounded-5" placeholder="Buscar">-->
+          </div>               
+            <button class="navbar-toggler" [ngStyle]="{'background-color':maincolor}" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navmenu">
+                <ul class="navbar-nav ms-auto fw-bold">
+                    <li class="nav-item dropdown">
+                    <li class="nav-item">
+                        <a class="nav-link active text-white mx-4" routerLink="/layout/home">Home</a>              
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active text-white mx-4" routerLink="/layout/preguntas" style="cursor: pointer;">
+                            Preguntas 
+                        </a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link active text-white mx-4" routerLink="/layout/resultados">Resultados</a>              
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link active text-white mx-4"  style="cursor: pointer;" (click)="Logout()">
+                          Salir
+                      </a>
+                  </li>
+
+                </ul>
+            </div>     
+        </div>       
+      </nav> 
